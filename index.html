@@ -9,38 +9,33 @@
     </style>
 </head>
 <body>
-    <!-- Підключення Three.js та GLTFLoader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
 
     <script>
-        // Створюємо сцену, камеру та рендер
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Додаємо світло
         const light = new THREE.DirectionalLight(0xffffff, 1);
         light.position.set(10, 10, 10).normalize();
         scene.add(light);
 
-        // Додаємо фон нічного неба з місяцем і зірками
         const textureLoader = new THREE.TextureLoader();
         const skyTexture = textureLoader.load('https://example.com/path_to_your_stars_moon_texture.jpg');
         scene.background = skyTexture;
 
-        // Додаємо рельєф (гори)
+       
         const terrainGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
         const terrainMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513, wireframe: false });
         const terrain = new THREE.Mesh(terrainGeometry, terrainMaterial);
         terrain.rotation.x = -Math.PI / 2;
         scene.add(terrain);
 
-        // Генеруємо випадкову висоту для рельєфу
         const vertices = terrainGeometry.attributes.position.array;
         for (let i = 0; i < vertices.length; i += 3) {
             vertices[i + 2] = Math.random() * 5; // Генеруємо висоту
@@ -48,7 +43,6 @@
         terrainGeometry.attributes.position.needsUpdate = true;
         terrainGeometry.computeVertexNormals();
 
-        // Додаємо текст з ім'ям та навичками
         const fontLoader = new THREE.FontLoader();
         fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
             const textGeometry = new THREE.TextGeometry('', {
@@ -64,51 +58,21 @@
             });
             const textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set(-10, 5, 0);  // Розміщення тексту
+            textMesh.position.set(-10, 5, 0);
             scene.add(textMesh);
         });
 
-        // Завантажуємо модель квадроцикла
-        let bikeMesh;
-        const loader = new THREE.GLTFLoader();
-        loader.load('path_to_quad_bike_model.glb', function (gltf) {
-            bikeMesh = gltf.scene;
-            bikeMesh.scale.set(0.5, 0.5, 0.5); // Зменшення масштабу моделі квадроцикла
-            bikeMesh.position.set(0, 1, 0); // Підняти квадроцикл над землею
-            scene.add(bikeMesh);
-        }, undefined, function (error) {
-            console.error('Error loading model', error);
-        });
-
-        // Камера
+     
         camera.position.set(0, 5, 15);
         camera.lookAt(0, 1, 0);
 
-        // Управління квадроциклом
-        document.addEventListener('keydown', (event) => {
-            if (bikeMesh) {
-                if (event.key === 'ArrowUp') {
-                    bikeMesh.position.z -= 0.5;  // Рух вперед
-                }
-                if (event.key === 'ArrowDown') {
-                    bikeMesh.position.z += 0.5;  // Рух назад
-                }
-                if (event.key === 'ArrowLeft') {
-                    bikeMesh.position.x -= 0.5;  // Рух вліво
-                }
-                if (event.key === 'ArrowRight') {
-                    bikeMesh.position.x += 0.5;  // Рух вправо
-                }
-            }
-        });
-
-        // Анімація
+    
         function animate() {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
         }
 
-        animate();  // Запуск анімації
+        animate();  ]
     </script>
 </body>
 </html>
